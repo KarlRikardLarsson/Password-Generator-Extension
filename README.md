@@ -10,7 +10,6 @@ This is a simple password generator web application.
 - Customizable password options (length, uppercase, lowercase, numbers, symbols)
 
 ## Installation
-
 1. Clone the repository:
    ```bash
-   git clone [https://github.com/yourusername/your-repository-name](https://github.com/KarlRikardLarsson/Password-Generator-Extension).git
+   git clone https://github.com/KarlRikardLarsson/Password-Generator-Extension.git

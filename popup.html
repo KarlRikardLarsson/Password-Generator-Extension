@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Password Generator</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #1c1c1c;
+      color: #ffffff;
+      width: 400px;
+      height: 540px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .container {
+      padding: 20px;
+      text-align: center;
+    }
+    .header {
+      padding: 20px;
+      background-color: #282828;
+      border-radius: 10px 10px 0 0;
+      margin: -20px -20px 20px -20px;
+    }
+    .header img {
+      width: 80px;
+      margin-bottom: 10px;
+    }
+    .header h1 {
+      font-size: 24px;
+      margin: 0;
+      color: #ffffff;
+    }
+    .lock-button {
+      margin-bottom: 10px;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    .lock-icon {
+      width: 50px;
+      height: 50px;
+      transition: transform 0.5s ease-in-out, fill 0.5s ease-in-out;
+    }
+    .lock-open {
+      transform: rotate(90deg);
+      fill: #4caf50;
+    }
+    .password-display {
+      background-color: #333;
+      padding: 10px;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .password-display input {
+      border: none;
+      font-size: 18px;
+      width: 100%;
+      background: none;
+      color: #ffffff;
+      outline: none;
+    }
+    .password-display button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+    .controls {
+      background-color: #333;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .controls label {
+      font-weight: bold;
+      color: #ffffff;
+    }
+    .controls .checkbox-group {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+      position: relative;
+    }
+    .controls .checkbox-group label {
+      display: flex;
+      align-items: center;
+      position: relative;
+    }
+    .controls .checkbox-group input {
+      margin-right: 5px;
+    }
+    .tooltip {
+      visibility: hidden;
+      background-color: #555;
+      color: #fff;
+      text-align: center;
+      border-radius: 5px;
+      padding: 5px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%; /* Position the tooltip above the text */
+      left: 50%;
+      margin-left: -60px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      width: 120px;
+    }
+    .checkbox-group label:hover .tooltip {
+      visibility: visible;
+      opacity: 1;
+    }
+    .controls .range-group {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+    .controls .range-group input[type="number"] {
+      width: 60px;
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      text-align: center;
+      color: #333;
+    }
+    .controls .range-group input[type="range"] {
+      flex-grow: 1;
+      margin-left: 10px;
+    }
+    .controls .button-group {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .controls .button-group button {
+      background-color: #7c4dff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+    }
+    .controls .button-group button:hover {
+      background-color: #6200ea;
+    }
+    .notification {
+      display: none;
+      background-color: #4caf50;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      position: fixed;
+      z-index: 1;
+      bottom: 70px; /* Adjusted position */
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 5px;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    .notification.show {
+      display: block;
+      opacity: 1;
+    }
+    .strength-meter {
+      height: 5px;
+      width: 100%;
+      background-color: #ccc;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
+    .strength-meter div {
+      height: 100%;
+      width: 0;
+      background-color: #ff4d4d;
+      border-radius: 5px;
+      transition: width 0.5s ease-in-out, background-color 0.5s ease-in-out;
+    }
+    .footer {
+      padding: 10px;
+      background-color: #282828;
+      border-radius: 0 0 10px 10px;
+      text-align: center;
+      font-size: 12px;
+      color: #aaaaaa;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <button class="lock-button" id="lockButton">
+        <svg id="lockIcon" class="lock-icon" xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 0 24 24" width="48" fill="#ffffff">
+          <path d="M0 0h24v24H0z" fill="none"/>
+          <path d="M12 17c1.1 0 1.99-.9 1.99-2S13.1 13 12 13s-2 .9-2 2 .9 2 2 2zm6-6h-1V9c0-2.76-2.24-5-5-5S7 6.24 7 9v2H6c-1.1 0-2 .9-2 2v7c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-7c0-1.1-.9-2-2-2zm-6-3c1.66 0 3 1.34 3 3v2H9V9c0-1.66 1.34-3 3-3z"/>
+        </svg>
+      </button>
+      <h1>Password Generator</h1>
+    </div>
+    <div class="password-display">
+      <input type="text" id="password" readonly>
+      <button class="copy-button" id="copy">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="#ffffff">
+          <path d="M0 0h24v24H0z" fill="none"/>
+          <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+        </svg>
+      </button>
+    </div>
+    <div class="strength-meter" id="strengthMeter">
+      <div></div>
+    </div>
+    <div class="controls">
+      <label for="length">Password Length</label>
+      <div class="range-group">
+        <input type="number" id="length" value="12" min="4" max="64" readonly>
+        <input type="range" id="lengthRange" min="4" max="64" value="12">
+      </div>
+      <div class="checkbox-group">
+        <label>
+          <input type="checkbox" id="includeUppercase" checked> Uppercase
+          <span class="tooltip">Include uppercase letters</span>
+        </label>
+        <label>
+          <input type="checkbox" id="includeLowercase" checked> Lowercase
+          <span class="tooltip">Include lowercase letters</span>
+        </label>
+        <label>
+          <input type="checkbox" id="includeNumbers" checked> Numbers
+          <span class="tooltip">Include numbers</span>
+        </label>
+        <label>
+          <input type="checkbox" id="includeSymbols" checked> Symbols
+          <span class="tooltip">Include symbols</span>
+        </label>
+      </div>
+      <div class="button-group">
+        <button id="generate">Generate Password</button>
+      </div>
+    </div>
+    <div id="notification" class="notification">Password copied to clipboard!</div>
+  </div>
+  <div class="footer">
+    You can always trust Rikard to create a secure password, but not to remember it.
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -13,4 +13,4 @@ This is a simple password generator web application.
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/your-repository-name.git
+   git clone [https://github.com/yourusername/your-repository-name](https://github.com/KarlRikardLarsson/Password-Generator-Extension).git
